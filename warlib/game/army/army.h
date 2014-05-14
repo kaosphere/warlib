@@ -54,4 +54,45 @@ private:
 
 Q_DECLARE_METATYPE(Army*)
 
+namespace QtMetaTypePrivate {
+template <>
+struct QMetaTypeFunctionHelper<Army, true> {
+    static void Delete(void *t)
+    {
+        delete static_cast<Army*>(t);
+    }
+
+    static void *Create(const void *t)
+    {
+        Q_UNUSED(t)
+        return new Army();
+    }
+
+    static void Destruct(void *t)
+    {
+        Q_UNUSED(t) // Silence MSVC that warns for POD types.
+        static_cast<Army*>(t)->~Army();
+    }
+
+    static void *Construct(void *where, const void *t)
+    {
+        Q_UNUSED(t)
+        return new (where) Army;
+    }
+#ifndef QT_NO_DATASTREAM
+    static void Save(QDataStream &stream, const void *t)
+    {
+        stream << *static_cast<const Army*>(t);
+    }
+
+    static void Load(QDataStream &stream, void *t)
+    {
+        stream >> *static_cast<Army*>(t);
+    }
+#endif // QT_NO_DATASTREAM
+};
+
+}
+
+
 #endif // Army_H
