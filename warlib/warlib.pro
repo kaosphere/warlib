@@ -38,7 +38,8 @@ SOURCES += \
     core/messagequeue.cpp \
     core/message.cpp \
     game/game.cpp \
-    game/player.cpp
+    game/player.cpp \
+    Utilities/SaveManager/filesaver.cpp
 	
 HEADERS += \
     game/stats/statsmodel.h \
@@ -67,7 +68,8 @@ HEADERS += \
     core/messagequeue.h \
     core/message.h \
     game/game.h \
-    game/player.h
+    game/player.h \
+    Utilities/SaveManager/filesaver.h
 
 INSTALLS += target
 
