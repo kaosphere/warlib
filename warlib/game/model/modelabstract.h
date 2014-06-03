@@ -18,6 +18,7 @@
 #include "game/option/optionmodel.h"
 #include "game/stats/statsmodel.h"
 #include "game/paramsfromUI/paramsfromuimodel.h"
+#include "core/serializableobject.h"
 #include "defines.h"
 
 //! ModelAbstract class
@@ -27,8 +28,16 @@
 * TODO AJ 2014-05-06 : this class should be a pure abstract class but serialization
 * prevents to do it. Find a way to do this more cleanly.
 */
-class ModelAbstract
+class ModelAbstract : public SerializableObject
 {
+    Q_OBJECT
+    Q_PROPERTY(StatsModel stats READ getStats WRITE setStats NOTIFY StatsChanged)
+    Q_PROPERTY(int squareBaseW READ getSquareBaseW WRITE setSquareBaseW NOTIFY squareBaseWChanged)
+    Q_PROPERTY(int squareBaseL READ getSquareBaseL WRITE setSquareBaseL NOTIFY squareBaseLChanged)
+    Q_PROPERTY(int unitPower READ getUnitPower WRITE setUnitPower NOTIFY unitPowerChanged)
+    Q_PROPERTY(QString imagePath READ getImagePath WRITE setImagePath NOTIFY imagePathChanged)
+    Q_PROPERTY(QList options READ getOptions WRITE setOptions NOTIFY optionsChanged)
+
 public:
 	//! Constructor.
 	/*!
@@ -47,7 +56,7 @@ public:
 	* \param figSup DEPRECATED. TODO: Remove
 	*/
     ModelAbstract(const StatsModel& stat, const int &widthBase,
-                  const int &lengthBase, const int &unitP, const QString& url, bool figSup);
+                  const int &lengthBase, const int &unitP, const QString& url);
 	
 	//! A constructor.
 	/*!
@@ -76,11 +85,15 @@ public:
                   const QString &balisticS, const QString &strength, const QString &toughness,
                   const QString &wounds, const QString &init, const QString &attacks,
                   const QString &leadership, const QString &save, const QString &invSave, const int points, const int &widthBase,
-                  const int &lengthBase, const int &unitP, const QString& url, bool figSup);
+                  const int &lengthBase, const int &unitP, const QString& url);
 	
 	//! Copy Constructor.
 	/*!
-	* Copy constructor of ModelAbstract class
+    * Copy constructor of ModelAbstract class
+    * Here the copy constructor calls the base constructor of
+    * SerializableObject because copy constructor of QObject is
+    * disabled. This way, a new QObject is created each time
+    * and the identity paradigm from Qt is respected.
 	*/
     ModelAbstract(const ModelAbstract &Copy);
 	
@@ -95,48 +108,35 @@ public:
 	* VIRTUAL : Method that initiate the saving of the model object in a file.
 	* \param path File path of the file to be saved.
 	*/
-    virtual void save(const QString path);
-
-    //! SerializeOut
-    /*!
-     * VIRTUAL : Method to serialize unknown modelabstract pointer.
-     */
-    virtual QDataStream &serializeOut(QDataStream &out);
-
-    //! SerializeIn
-    /*!
-     * VIRTUAL : Method to serialize unknown modelabstract pointer.
-     * \param in QDataStream from which the data is read to feed the object.
-     */
-    virtual QDataStream &serializeIn(QDataStream& in);
+    virtual void save(const QString path) = 0;
 	
 	//! setFromFile
 	/*!
 	* VIRTUAL : Method that loads a model from a previously saved file.
 	* \param path File path of the file to be loaded.
 	*/
-    virtual ModelAbstract* setFromFile(const QString path);
+    virtual ModelAbstract* setFromFile(const QString path) = 0;
     
     //! setFromUI
 	/*!
 	* VIRTUAL : Method that loads a model from a form in the UI.
 	* \param params parameter object containing every model possible parameters.
 	*/
-    virtual ModelAbstract* setFromUI(const ParamsfromUImodel* params);
+    virtual ModelAbstract* setFromUI(const ParamsfromUImodel* params) = 0;
     
     //! Load
 	/*!
 	* VIRTUAL : Method that initiate the loading of the model object from a file.
 	* \param path File path of the file to be loaded.
 	*/
-    virtual void load(const QString path);
+    virtual void load(const QString path) = 0;
     
     //! displayStringInfo
 	/*!
 	* VIRTUAL Method that returns a string summerizing the values in the object.
 	* \return String containing information.
 	*/
-    virtual QString displayStringInfo();
+    virtual QString displayStringInfo() = 0;
     
     //! displayBaseInfo
 	/*!
@@ -151,7 +151,7 @@ public:
 	* using HTML format. Used principally to export data as pdf files.
 	* \return String containing information using HTML.
 	*/
-    virtual QString getHtml();
+    virtual QString getHtml() = 0;
     
     //! getBaseHtml
 	/*!
@@ -166,7 +166,7 @@ public:
     * VIRTUAL : Method that returns a copy of the object. This is used to copy a pointer
     * to a derived class.
     */
-    virtual ModelAbstract* clone();
+    virtual ModelAbstract* clone() = 0;
 
     StatsModel getStats() const;
     void setStats(const StatsModel &value);
@@ -179,12 +179,6 @@ public:
 
     int getUnitPower() const;
     void setUnitPower(int value);
-
-    QPixmap *getImage() const;
-    void setImage(QPixmap *value);
-
-    bool getFigSupInd() const;
-    void setFigSupInd(bool value);
 
     QList<OptionModel> getOptions() const;
     void setOptions(const QList<OptionModel> &value);
@@ -227,15 +221,15 @@ public:
 	*/
     void clearOptions();
 
-    QString getUrlImage() const;
-    void setUrlImage(const QString &value);
+    QString getImagePath() const;
+    void setImagePath(const QString &value);
 
 	//! clearOptions
 	/*!
 	* Virtual method that computes the global number of points of a model
 	* included chosen options.
 	*/
-    virtual int computePoints();
+    virtual int computePoints() = 0;
 
     int getRegimentPoints();
     int computeBasePoints();
@@ -247,7 +241,6 @@ protected:
 	* StatsModel object of the model
 	*/
     StatsModel stats;
-    //QList<ModelAbstract *> champion; //list of possible champion
 
     /// Width of the square base in millimeters
     int squareBaseW;
@@ -258,17 +251,8 @@ protected:
     /// Unit power of the model
     int unitPower;
 
-    // TODO : AJ 2014-05-06 This one isn't used : to be removed.
-    /// Independant models (for charriots, war machines and monsters)
-    bool figSupInd;
-
-    // TODO : AJ 2014-05-06 This one isn't used : to be removed. (isn't even serialized)
-    /// Image of the model to be used in the graphics
-    QPixmap *image;
-
-    // TODO : AJ 2014-05-06 Change name with path (confusing with internet link)
     /// Path to the image
-    QString urlImage;
+    QString imagePath;
 
     /// List of options possible for model
     QList<OptionModel> options;
@@ -294,24 +278,6 @@ protected:
 
     /// Stats of the champion that the model can be assigned to.
     StatsModel championStats;
-	
-	//! QDataStream & operator <<
-	/*!
-	* Friend QDataStream operator << used to serialize data and save files.
-	* \param QDataStream& stream where the data will be inputed.
-	* \param ModelAbstract& object to be serialized.
-	* \return The stream containing the data.
-	*/
-    friend QDataStream & operator << (QDataStream &, const ModelAbstract &);
-    
-    //! QDataStream & operator >>
-	/*!
-	* Friend QDataStream operator >> used to serialize data and load files.
-	* \param QDataStream& stream from where the data will be outputed.
-	* \param ModelAbstract& object to be serialized.
-	* \return The stream containing the data.
-	*/
-    friend QDataStream & operator >> (QDataStream &, ModelAbstract &);   
 };
 
 #endif // MODELABSTRACT_H

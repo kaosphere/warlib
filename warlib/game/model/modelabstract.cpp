@@ -8,19 +8,13 @@ ModelAbstract::ModelAbstract(const StatsModel &stat,
                              const int &widthBase,
                              const int &lengthBase,
                              const int &unitP,
-                             const QString &url,
-                             bool figSup)
+                             const QString &url)
 {
     stats = stat;
     squareBaseW = widthBase;
     squareBaseL = lengthBase;
     unitPower = unitP;
-    
-    image = new QPixmap(urlImage);
-
-    urlImage = url;
-    
-    figSupInd = figSup;
+    imagePath = url;
 }
 
 ModelAbstract::ModelAbstract(const QString &n,
@@ -39,8 +33,7 @@ ModelAbstract::ModelAbstract(const QString &n,
                              const int &widthBase,
                              const int &lengthBase,
                              const int &unitP,
-                             const QString &url,
-                             bool figSup)
+                             const QString &url)
 {
     stats.setName(n);
     stats.setM(move);
@@ -60,18 +53,13 @@ ModelAbstract::ModelAbstract(const QString &n,
     squareBaseL = lengthBase;
     unitPower = unitP;
 
-    image = new QPixmap(urlImage);
-
-    urlImage = url;
-
-    figSupInd = figSup;
-
+    imagePath = url;
 }
 
-ModelAbstract::ModelAbstract(const ModelAbstract &copy)
+ModelAbstract::ModelAbstract(const ModelAbstract &copy) : SerializableObject()
 {
     stats = copy.stats;
-    urlImage = copy.urlImage;
+    imagePath = copy.imagePath;
     squareBaseW = copy.squareBaseW;
     squareBaseL = copy.squareBaseL;
     unitPower = copy.unitPower;
@@ -86,34 +74,6 @@ ModelAbstract::ModelAbstract(const ModelAbstract &copy)
 
 ModelAbstract::~ModelAbstract(){}
 
-void ModelAbstract::save(const QString path)
-{
-    Q_UNUSED(path);
-    // We should never pass here
-}
-
-QDataStream& ModelAbstract::serializeOut(QDataStream& out)
-{
-    // We Should never pass here
-    return out;
-}
-
-QDataStream& ModelAbstract::serializeIn(QDataStream &in)
-{
-    // We should never pass here
-    return in;
-}
-
-ModelAbstract *ModelAbstract::setFromFile(const QString path)
-{
-    Q_UNUSED(path);
-    return NULL;
-}
-
-QString ModelAbstract::displayStringInfo()
-{
-    return QString("ERROR");
-}
 
 QString ModelAbstract::displayBaseInfo()
 {
@@ -155,10 +115,6 @@ QString ModelAbstract::displayBaseInfo()
     return s;
 }
 
-QString ModelAbstract::getHtml()
-{
-    return QString("ERROR");
-}
 
 QString ModelAbstract::getBaseHtml()
 {
@@ -178,25 +134,6 @@ QString ModelAbstract::getBaseHtml()
 	html += "<br/>\n";
 	
     return html;
-}
-
-ModelAbstract *ModelAbstract::clone()
-{
-    // We should never pass here
-    return NULL;
-}
-
-ModelAbstract *ModelAbstract::setFromUI(const ParamsfromUImodel *params)
-{
-    Q_UNUSED(params);
-    //We should never pass here
-    return NULL;
-}
-
-
-void ModelAbstract::load(const QString path)
-{
-    Q_UNUSED(path);
 }
 
 
@@ -221,16 +158,6 @@ void ModelAbstract::setUnitPower(int value)
     unitPower = value;
 }
 
-QPixmap *ModelAbstract::getImage() const
-{
-    return image;
-}
-
-void ModelAbstract::setImage(QPixmap *value)
-{
-    image = value;
-}
-
 int ModelAbstract::getSquareBaseL() const
 {
     return squareBaseL;
@@ -250,17 +177,6 @@ void ModelAbstract::setSquareBaseW(int value)
 {
     squareBaseW = value;
 }
-
-bool ModelAbstract::getFigSupInd() const
-{
-    return figSupInd;
-}
-
-void ModelAbstract::setFigSupInd(bool value)
-{
-    figSupInd = value;
-}
-
 
 QList<OptionModel> ModelAbstract::getOptions() const
 {
@@ -287,14 +203,14 @@ void ModelAbstract::clearOptions()
     options.clear();
 }
 
-QString ModelAbstract::getUrlImage() const
+QString ModelAbstract::getImagePath() const
 {
-    return urlImage;
+    return imagePath;
 }
 
-void ModelAbstract::setUrlImage(const QString &value)
+void ModelAbstract::setImagePath(const QString &value)
 {
-    urlImage = value;
+    imagePath = value;
 }
 
 StatsModel ModelAbstract::getChampionStats() const
@@ -358,11 +274,6 @@ void ModelAbstract::setBannerPoints(int value)
     bannerPoints = value;
 }
 
-int ModelAbstract::computePoints()
-{
-    return 0;
-}
-
 int ModelAbstract::getRegimentPoints()
 {
     int points = 0;
@@ -385,62 +296,4 @@ int ModelAbstract::computeBasePoints()
             points += i->getNbPoints();
     }
     return points;
-}
-
-QDataStream &operator <<(QDataStream & out, const ModelAbstract & obj)
-{
-    out << SAVE_VERSION
-        << obj.stats
-        << obj.squareBaseW
-        << obj.squareBaseL
-        << obj.unitPower
-        << obj.figSupInd
-        << obj.urlImage
-        << obj.options.size();
-
-    for(int i = 0 ; i < obj.options.size() ; i++)
-    {
-        out << obj.options[i];
-    }
-
-    out << obj.banner
-        << obj.bannerPoints
-        << obj.musician
-        << obj.musicianPoints
-        << obj.champion
-        << obj.championStats;
-
-    return out;
-}
-
-QDataStream &operator >>(QDataStream & in, ModelAbstract & obj)
-{
-    int nb;
-    int version = 0;
-
-    in >> version;
-    in >> obj.stats;
-    in >> obj.squareBaseW;
-    in >> obj.squareBaseL;
-    in >> obj.unitPower;
-    in >> obj.figSupInd;
-    in >> obj.urlImage;
-
-    in >> nb;
-
-    for(int i = 0 ; i < nb ; i++)
-    {
-        OptionModel o;
-        in >> o;
-        obj.addOption(o);
-    }
-
-    in >> obj.banner;
-    in >> obj.bannerPoints;
-    in >> obj.musician;
-    in >> obj.musicianPoints;
-    in >> obj.champion;
-    in >> obj.championStats;
-
-    return in;
 }
