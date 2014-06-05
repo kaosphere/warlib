@@ -73,8 +73,8 @@ public slots:
     
 };
 
-QDataStream &operator<<(QDataStream &ds, const QList<OptionModel> &obj);
-QDataStream &operator>>(QDataStream &ds, QList<OptionModel> &obj);
+QDataStream &operator<<(QDataStream &ds, const QList<OptionModel*> &obj);
+QDataStream &operator>>(QDataStream &ds, QList<OptionModel*> &obj);
 
 Q_DECLARE_METATYPE(OptionModel)
 

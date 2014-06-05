@@ -35,7 +35,7 @@ class ModelAbstract : public SerializableObject
     Q_PROPERTY(int squareBaseL READ getSquareBaseL WRITE setSquareBaseL NOTIFY squareBaseLChanged)
     Q_PROPERTY(int unitPower READ getUnitPower WRITE setUnitPower NOTIFY unitPowerChanged)
     Q_PROPERTY(QString imagePath READ getImagePath WRITE setImagePath NOTIFY imagePathChanged)
-    Q_PROPERTY(QList<OptionModel> options READ getOptions WRITE setOptions NOTIFY optionsChanged)
+    Q_PROPERTY(QList<OptionModel*> options READ getOptions WRITE setOptions NOTIFY optionsChanged)
     Q_PROPERTY(bool banner READ getBanner WRITE setBanner NOTIFY bannerChanged)
     Q_PROPERTY(int bannerPoints READ getBannerPoints WRITE setBannerPoints NOTIFY bannerPointsChanged)
     Q_PROPERTY(bool musician READ getMusician WRITE setMusician NOTIFY musicianChanged)
@@ -185,8 +185,8 @@ public:
     int getUnitPower() const;
     void setUnitPower(int value);
 
-    QList<OptionModel> getOptions() const;
-    void setOptions(const QList<OptionModel> &value);
+    QList<OptionModel*> getOptions() const;
+    void setOptions(const QList<OptionModel *> &value);
 
     bool getBanner() const;
     void setBanner(bool value);
@@ -211,14 +211,14 @@ public:
 	* Method that adds an option to the list of options
 	* \param opt option to be added
 	*/
-    void addOption(const OptionModel& opt);
+    void addOption(OptionModel *opt);
     
     //! removeOption
 	/*!
 	* Method that removes an option to the list of options
 	* \param opt option to be removed
 	*/
-    void removeOption(const OptionModel &opt);
+    void removeOption(OptionModel *opt);
     
     //! clearOptions
 	/*!
@@ -274,7 +274,7 @@ protected:
     QString imagePath;
 
     /// List of options possible for model
-    QList<OptionModel> options;
+    QList<OptionModel* > options;
 
     /// Note : it is more easy to have the banner, musician and champion informations
     /// in the model class because we don't want to enter them each time we make a regiment

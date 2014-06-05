@@ -89,11 +89,11 @@ QString ModelAbstract::displayBaseInfo()
     info << "Unit power : " << unitPower << endl;
     info << "Image path : " << imagePath << endl;
     info << "Available options : " << endl;
-    QList<OptionModel>::iterator i;
+    QList<OptionModel*>::iterator i;
     for(i = options.begin(); i < options.end() ; ++i)
     {
         info << "----------------------------" << endl;
-        info << i->displayString() << endl;
+        info << (*i)->displayString() << endl;
     }
     if(musician)
     {
@@ -125,13 +125,13 @@ QString ModelAbstract::getBaseHtml()
     QString html;
     html += QString("%1</h2>\n").arg(stats.getName());
 	html += stats.getHtml();
-	QList<OptionModel>::iterator i;
+    QList<OptionModel*>::iterator i;
     for(i = options.begin(); i < options.end() ; ++i)
     {
-        if(i->isActivated())
+        if((*i)->isActivated())
         {
             html += "<li>";
-            html += i->getHtml();
+            html += (*i)->getHtml();
             html += "</li>\n";
         }
 	}
@@ -182,22 +182,22 @@ void ModelAbstract::setSquareBaseW(int value)
     squareBaseW = value;
 }
 
-QList<OptionModel> ModelAbstract::getOptions() const
+QList<OptionModel *> ModelAbstract::getOptions() const
 {
     return options;
 }
 
-void ModelAbstract::setOptions(const QList<OptionModel> &value)
+void ModelAbstract::setOptions(const QList<OptionModel*> &value)
 {
     options = value;
 }
 
-void ModelAbstract::addOption(const OptionModel &opt)
+void ModelAbstract::addOption(OptionModel *opt)
 {
     options << opt;
 }
 
-void ModelAbstract::removeOption(const OptionModel& opt)
+void ModelAbstract::removeOption(OptionModel* opt)
 {
     options.removeOne(opt);
 }
@@ -281,11 +281,11 @@ void ModelAbstract::setBannerPoints(int value)
 int ModelAbstract::getRegimentPoints()
 {
     int points = 0;
-    QList<OptionModel>::iterator i;
+    QList<OptionModel*>::iterator i;
     for (i = options.begin(); i != options.end(); ++i)
     {
-        if(i->isActivated() && i->isRegimentOptions())
-            points += i->getNbPoints();
+        if((*i)->isActivated() && (*i)->isRegimentOptions())
+            points += (*i)->getNbPoints();
     }
     return points;
 }
@@ -293,11 +293,11 @@ int ModelAbstract::getRegimentPoints()
 int ModelAbstract::computeBasePoints()
 {
     int points = stats.getPoints();
-    QList<OptionModel>::iterator i;
+    QList<OptionModel*>::iterator i;
     for (i = options.begin(); i != options.end(); ++i)
     {
-        if(i->isActivated() && !i->isRegimentOptions())
-            points += i->getNbPoints();
+        if((*i)->isActivated() && !(*i)->isRegimentOptions())
+            points += (*i)->getNbPoints();
     }
     return points;
 }

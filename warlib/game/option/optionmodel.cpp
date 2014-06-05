@@ -122,28 +122,28 @@ void OptionModel::setRegimentOptions(bool value)
 void OptionModel::initOptionModelMetaType()
 {
     qRegisterMetaTypeStreamOperators<OptionModel>("OptionModel");
-    qRegisterMetaTypeStreamOperators<QList<OptionModel> >("QList<OptionModel>");
+    qRegisterMetaTypeStreamOperators<QList<OptionModel*> >("QList<OptionModel*>");
     qMetaTypeId<OptionModel>();
 }
 
-QDataStream &operator<<(QDataStream &ds, const QList<OptionModel> &obj)
+QDataStream &operator<<(QDataStream &ds, const QList<OptionModel*> &obj)
 {
     ds << obj.size();
     for(int i = 0 ; i<obj.size(); i++)
     {
-        ds << obj[i];
+        ds << *obj[i];
     }
     return ds;
 }
 
-QDataStream &operator>>(QDataStream &ds, QList<OptionModel> &obj)
+QDataStream &operator>>(QDataStream &ds, QList<OptionModel*> &obj)
 {
     int size = 0;
     ds >> size;
     for(int i = 0 ; i<size; i++)
     {
-        OptionModel o;
-        ds >> o;
+        OptionModel* o = new OptionModel();
+        ds >> *o;
         obj.append(o);
     }
     return ds;
