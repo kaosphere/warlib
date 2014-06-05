@@ -16,18 +16,34 @@
 #include <QTextStream>
 
 #include "defines.h"
+#include "core/serializableobject.h"
 
 
 //! StatsModel class
 /*!
 * This class holds all the common attributes of a model.
 */
-class StatsModel
+class StatsModel : public SerializableObject
 {
+    Q_OBJECT
+    Q_PROPERTY(QString name READ getName WRITE setName NOTIFY nameChanged)
+    Q_PROPERTY(QString m READ getM WRITE setM NOTIFY mChanged)
+    Q_PROPERTY(QString ws READ getWs WRITE setWs NOTIFY wsChanged)
+    Q_PROPERTY(QString bs READ getBs WRITE setBs NOTIFY bsChanged)
+    Q_PROPERTY(QString s READ getS WRITE setS NOTIFY sChanged)
+    Q_PROPERTY(QString t READ getT WRITE setT NOTIFY tChanged)
+    Q_PROPERTY(QString w READ getW WRITE setW NOTIFY wChanged)
+    Q_PROPERTY(QString i READ getI WRITE setI NOTIFY iChanged)
+    Q_PROPERTY(QString a READ getA WRITE setA NOTIFY aChanged)
+    Q_PROPERTY(QString ld READ getLd WRITE setLd NOTIFY ldChanged)
+    Q_PROPERTY(QString svg READ getSvg WRITE setSvg NOTIFY svgChanged)
+    Q_PROPERTY(QString svgInv READ getSvgInv WRITE setSvgInv NOTIFY svgInvChanged)
+    Q_PROPERTY(int points READ getPoints WRITE setPoints NOTIFY pointsChanged)
+
 public:
-	//! Constructor.
+    //! Constructor.
 	/*!
-	* Base constructor of StatsModel class
+    * Base constructor of StatsModel class
 	*/
     StatsModel();
     
@@ -63,7 +79,7 @@ public:
 	/*!
 	* Base destructor of StatsModel class
 	*/
-    ~StatsModel();
+    virtual ~StatsModel();
 	
 	//! operator=
 	/*!
@@ -198,6 +214,28 @@ public:
     int getPoints() const;
     void setPoints(int value);
 
+    //! initStatsModelMetaType
+    /*!
+    * Init metatype information of the class so that it can be
+    * serialized by Qt property system.
+    */
+    static void initStatsModelMetaType();
+
+signals:
+    void nameChanged();
+    void mChanged();
+    void wsChanged();
+    void bsChanged();
+    void sChanged();
+    void tChanged();
+    void wChanged();
+    void iChanged();
+    void aChanged();
+    void ldChanged();
+    void svgChanged();
+    void svgInvChanged();
+    void pointsChanged();
+
 protected:
 
     QString name;	/// Name of the model
@@ -214,25 +252,8 @@ protected:
     QString svgInv; /// Invulnerable armor save of the model
 
     int points;     /// Points of the model
-
-	//! QDataStream & operator <<
-	/*!
-	* Friend QDataStream operator << used to serialize data and save files.
-	* \param QDataStream& stream where the data will be inputed.
-	* \param StatsModel& object to be serialized.
-	* \return The stream containing the data.
-	*/
-    friend QDataStream & operator << (QDataStream &, const StatsModel &);
-    
-    //! QDataStream & operator >>
-	/*!
-	* Friend QDataStream operator >> used to serialize data and load files.
-	* \param QDataStream& stream from where the data will be outputed.
-	* \param StatsModel& object to be serialized.
-	* \return The stream containing the data.
-	*/
-    friend QDataStream & operator >> (QDataStream &, StatsModel &);
-
 };
+
+Q_DECLARE_METATYPE(StatsModel)
 
 #endif // STATSMODEL_H

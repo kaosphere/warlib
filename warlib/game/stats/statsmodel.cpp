@@ -1,10 +1,10 @@
 #include "statsmodel.h"
 
-StatsModel::StatsModel()
+StatsModel::StatsModel():SerializableObject()
 {
 }
 
-StatsModel::StatsModel(const StatsModel &stat)
+StatsModel::StatsModel(const StatsModel &stat) : SerializableObject()
 {
     name = stat.name;
     m = stat.m;
@@ -80,51 +80,6 @@ bool StatsModel::operator ==(const StatsModel & stat)
         return true;
     }
     else return false;
-}
-
-// Overloading of << operator
-QDataStream & operator << (QDataStream & out, const StatsModel & obj)
-{
-    //out << obj.streamOut();
-    out << SAVE_VERSION
-        << obj.name
-        << obj.m
-        << obj.ws
-        << obj.bs
-        << obj.s
-        << obj.t
-        << obj.w
-        << obj.i
-        << obj.a
-        << obj.ld
-        << obj.svg
-        << obj.svgInv
-        << obj.points;
-
-    return out;
-}
-
-// Overloading of >> operator
-QDataStream & operator >> (QDataStream & in, StatsModel & obj)
-{
-    int version = 0;
-    //obj.streamIn(in);
-    in >> version;
-    in >> obj.name;
-    in >> obj.m;
-    in >> obj.ws;
-    in >> obj.bs;
-    in >> obj.s;
-    in >> obj.t;
-    in >> obj.w;
-    in >> obj.i;
-    in >> obj.a;
-    in >> obj.ld;
-    in >> obj.svg;
-    in >> obj.svgInv;
-    in >> obj.points;
-    
-    return in;
 }
 
 QString StatsModel::displayString() const
@@ -310,4 +265,10 @@ int StatsModel::getPoints() const
 void StatsModel::setPoints(int value)
 {
     points = value;
+}
+
+void StatsModel::initStatsModelMetaType()
+{
+    qRegisterMetaTypeStreamOperators<StatsModel>("StatsModel");
+    qMetaTypeId<StatsModel>();
 }

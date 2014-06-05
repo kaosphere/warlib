@@ -11,7 +11,6 @@
 
 #include <QObject>
 #include <QtCore>
-#include <QtWidgets>
 #include <iostream>
 #include <QTextDocument>
 
@@ -36,7 +35,13 @@ class ModelAbstract : public SerializableObject
     Q_PROPERTY(int squareBaseL READ getSquareBaseL WRITE setSquareBaseL NOTIFY squareBaseLChanged)
     Q_PROPERTY(int unitPower READ getUnitPower WRITE setUnitPower NOTIFY unitPowerChanged)
     Q_PROPERTY(QString imagePath READ getImagePath WRITE setImagePath NOTIFY imagePathChanged)
-    Q_PROPERTY(QList options READ getOptions WRITE setOptions NOTIFY optionsChanged)
+    Q_PROPERTY(QList<OptionModel> options READ getOptions WRITE setOptions NOTIFY optionsChanged)
+    Q_PROPERTY(bool banner READ getBanner WRITE setBanner NOTIFY bannerChanged)
+    Q_PROPERTY(int bannerPoints READ getBannerPoints WRITE setBannerPoints NOTIFY bannerPointsChanged)
+    Q_PROPERTY(bool musician READ getMusician WRITE setMusician NOTIFY musicianChanged)
+    Q_PROPERTY(int musicianPoints READ getMusicianPoints WRITE setMusicianPoints NOTIFY musicianPointsChanged)
+    Q_PROPERTY(bool champion READ getChampion WRITE setChampion NOTIFY championChanged)
+    Q_PROPERTY(StatsModel championStats READ getChampionStats WRITE setChampionStats NOTIFY championStatsChanged)
 
 public:
 	//! Constructor.
@@ -233,6 +238,20 @@ public:
 
     int getRegimentPoints();
     int computeBasePoints();
+
+signals:
+    void StatsChanged();
+    void squareBaseWChanged();
+    void squareBaseLChanged();
+    void unitPowerChanged();
+    void imagePathChanged();
+    void optionsChanged();
+    void bannerChanged();
+    void bannerPointsChanged();
+    void musicianChanged();
+    void musicianPointsChanged();
+    void championChanged();
+    void championStatsChanged();
 
 protected:
 

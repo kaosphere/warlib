@@ -7,6 +7,10 @@ SerializableObject::SerializableObject(QObject *parent) :
 {
 }
 
+SerializableObject::~SerializableObject()
+{
+}
+
 QDataStream &operator<<(QDataStream &ds, const SerializableObject &obj) {
     for(int i=0; i<obj.metaObject()->propertyCount(); ++i)
     {

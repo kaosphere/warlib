@@ -22,7 +22,9 @@ SOURCES += \
     Utilities/DiceRoller/DiceRoller.cpp \ 
     Utilities/PdfExporter/pdfexporter.cpp \
     Utilities/SaveManager/filesaver.cpp \
-    core/serializableobject.cpp
+    core/serializableobject.cpp \
+    game/model/test.cpp \
+    main.cpp
 	
 HEADERS += \
     game/stats/statsmodel.h \
@@ -35,7 +37,8 @@ HEADERS += \
     Utilities/DiceRoller/DiceRoller.h \ 
     Utilities/PdfExporter/pdfexporter.h \
     Utilities/SaveManager/filesaver.h \
-    core/serializableobject.h
+    core/serializableobject.h \
+    game/model/test.h
 
 INSTALLS += target
 

@@ -9,6 +9,7 @@ class SerializableObject : public QObject
     Q_OBJECT
 public:
     explicit SerializableObject(QObject *parent = 0);
+    virtual ~SerializableObject() = 0;
 
 signals:
 

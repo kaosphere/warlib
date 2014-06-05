@@ -84,6 +84,10 @@ QString ModelAbstract::displayBaseInfo()
     info << "====================================================" << endl;
     info << stats.displayString();
     info << "====================================================" << endl;
+    info << "Base width : " << squareBaseW << endl;
+    info << "Base length : " << squareBaseL << endl;
+    info << "Unit power : " << unitPower << endl;
+    info << "Image path : " << imagePath << endl;
     info << "Available options : " << endl;
     QList<OptionModel>::iterator i;
     for(i = options.begin(); i < options.end() ; ++i)

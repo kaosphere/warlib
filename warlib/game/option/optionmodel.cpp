@@ -13,7 +13,7 @@ OptionModel::OptionModel(const QString &n, const int &pts, const bool &act, cons
     regimentOptions = ro;
 }
 
-OptionModel::OptionModel(const OptionModel &obj)
+OptionModel::OptionModel(const OptionModel &obj) : SerializableObject()
 {
     name = obj.name;
     nbPoints = obj.nbPoints;
@@ -119,27 +119,33 @@ void OptionModel::setRegimentOptions(bool value)
     regimentOptions = value;
 }
 
-QDataStream & operator <<(QDataStream & out, const OptionModel & obj)
+void OptionModel::initOptionModelMetaType()
 {
-    out << SAVE_VERSION
-        << obj.name
-        << obj.nbPoints
-        << obj.activated
-        << obj.specialRules
-        << obj.regimentOptions;
-
-    return out;
+    qRegisterMetaTypeStreamOperators<OptionModel>("OptionModel");
+    qRegisterMetaTypeStreamOperators<QList<OptionModel> >("QList<OptionModel>");
+    qMetaTypeId<OptionModel>();
 }
 
-QDataStream & operator >>(QDataStream & in, OptionModel & obj)
+QDataStream &operator<<(QDataStream &ds, const QList<OptionModel> &obj)
 {
-    int version = 0;
-    in >> version;
-    in >> obj.name;
-    in >> obj.nbPoints;
-    in >> obj.activated;
-    in >> obj.specialRules;
-    in >> obj.regimentOptions;
-
-    return in;
+    ds << obj.size();
+    for(int i = 0 ; i<obj.size(); i++)
+    {
+        ds << obj[i];
+    }
+    return ds;
 }
+
+QDataStream &operator>>(QDataStream &ds, QList<OptionModel> &obj)
+{
+    int size = 0;
+    ds >> size;
+    for(int i = 0 ; i<size; i++)
+    {
+        OptionModel o;
+        ds >> o;
+        obj.append(o);
+    }
+    return ds;
+}
+
