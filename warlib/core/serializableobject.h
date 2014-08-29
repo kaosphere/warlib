@@ -19,5 +19,7 @@ public slots:
 
 QDataStream &operator<<(QDataStream &ds, const SerializableObject &obj);
 QDataStream &operator>>(QDataStream &ds, SerializableObject &obj) ;
+QDataStream &operator<<(QDataStream &ds, const SerializableObject *obj);
+QDataStream &operator>>(QDataStream &ds, SerializableObject *obj) ;
 
 #endif // SERIALIZABLEOBJECT_H

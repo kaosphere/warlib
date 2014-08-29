@@ -29,6 +29,7 @@ void WarlibInit::initModelSerialization()
 {
     StatsModel::initStatsModelMetaType();
     OptionModel::initOptionModelMetaType();
+    test::initTestMetatype();
     //ModelCavalry::initModelCavalrySystem();
     //ModelCharacter::initModelCharacterSystem();
     //ModelCharriot::initModelCharriotSystem();

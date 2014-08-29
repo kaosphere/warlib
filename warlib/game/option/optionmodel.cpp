@@ -2,6 +2,11 @@
 
 OptionModel::OptionModel()
 {
+    name = "";
+    nbPoints = 0;
+    activated = false;
+    specialRules = "";
+    regimentOptions = false;
 }
 
 OptionModel::OptionModel(const QString &n, const int &pts, const bool &act, const QString &specRules, const bool& ro)
@@ -121,31 +126,35 @@ void OptionModel::setRegimentOptions(bool value)
 
 void OptionModel::initOptionModelMetaType()
 {
+    // Register type
     qRegisterMetaTypeStreamOperators<OptionModel>("OptionModel");
-    qRegisterMetaTypeStreamOperators<QList<OptionModel*> >("QList<OptionModel*>");
     qMetaTypeId<OptionModel>();
+
+    // Register pointer type
+    qRegisterMetaTypeStreamOperators<OptionModel*>("OptionModel*");
+    qMetaTypeId<OptionModel*>();
 }
 
-QDataStream &operator<<(QDataStream &ds, const QList<OptionModel*> &obj)
-{
-    ds << obj.size();
-    for(int i = 0 ; i<obj.size(); i++)
-    {
-        ds << *obj[i];
-    }
-    return ds;
-}
+//QDataStream &operator<<(QDataStream &ds, const QList<OptionModel*> &obj)
+//{
+//    ds << obj.size();
+//    for(int i = 0 ; i<obj.size(); i++)
+//    {
+//        ds << *obj[i];
+//    }
+//    return ds;
+//}
 
-QDataStream &operator>>(QDataStream &ds, QList<OptionModel*> &obj)
-{
-    int size = 0;
-    ds >> size;
-    for(int i = 0 ; i<size; i++)
-    {
-        OptionModel* o = new OptionModel();
-        ds >> *o;
-        obj.append(o);
-    }
-    return ds;
-}
+//QDataStream &operator>>(QDataStream &ds, QList<OptionModel*> &obj)
+//{
+//    int size = 0;
+//    ds >> size;
+//    for(int i = 0 ; i<size; i++)
+//    {
+//        OptionModel* o = new OptionModel();
+//        ds >> *o;
+//        obj.append(o);
+//    }
+//    return ds;
+//}
 

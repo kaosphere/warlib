@@ -2,6 +2,9 @@
 
 test::test():ModelAbstract()
 {
+    value = 0;
+    name = "";
+    opt = new OptionModel();
 }
 
 test::test(const QString &n, const QString &move, const QString &weaponS,
@@ -14,6 +17,7 @@ test::test(const QString &n, const QString &move, const QString &weaponS,
 {
     value = val;
     name = na;
+    opt = new OptionModel();
 }
 
 QString test::displayStringInfo()
@@ -24,7 +28,7 @@ QString test::displayStringInfo()
     s << displayBaseInfo();
     s << "Test::Value : " << QString::number(value) << endl;
     s << "Test::name : " << name << endl;
-    s << "Test::opt : " << opt.displayString() << endl;
+    s << "Test::opt : " << opt->displayString() << endl;
 
     return out;
 }
@@ -36,12 +40,14 @@ void test::save(QString)
 
 ModelAbstract* test::setFromFile(const QString path)
 {
-
+    Q_UNUSED(path);
+    return NULL;
 }
 
 ModelAbstract* test::setFromUI(const ParamsfromUImodel *params)
 {
-
+    Q_UNUSED(params);
+    return NULL;
 }
 
 void test::load(QString)
@@ -51,27 +57,33 @@ void test::load(QString)
 
 QString test::getHtml()
 {
-
+    return NULL;
 }
 
 ModelAbstract *test::clone()
 {
-
+    return NULL;
 }
 
 int test::computePoints()
 {
-
+    return 0;
 }
 
-OptionModel test::getOpt() const
+OptionModel *test::getOpt() const
 {
     return opt;
 }
 
-void test::setOpt(const OptionModel &value)
+void test::setOpt(OptionModel *value)
 {
     opt = value;
+}
+
+void test::initTestMetatype()
+{
+    qRegisterMetaTypeStreamOperators<test>("test");
+    qMetaTypeId<test>();
 }
 
 QString test::getName() const

@@ -9,7 +9,7 @@ class test : public ModelAbstract
     Q_OBJECT
     Q_PROPERTY(int value READ getValue WRITE setValue NOTIFY valueChanged)
     Q_PROPERTY(QString name READ getName WRITE setName NOTIFY nameChanged)
-    Q_PROPERTY(OptionModel opt READ getOpt WRITE setOpt NOTIFY optChanged)
+    Q_PROPERTY(OptionModel* opt READ getOpt WRITE setOpt NOTIFY optChanged)
 
 public:
     test();
@@ -36,8 +36,10 @@ public:
     virtual ModelAbstract* clone();
     virtual int computePoints();
 
-    OptionModel getOpt() const;
-    void setOpt(const OptionModel &value);
+    OptionModel* getOpt() const;
+    void setOpt(OptionModel *value);
+
+    static void initTestMetatype();
 
 signals:
     void valueChanged();
@@ -47,7 +49,10 @@ signals:
 private:
     int value;
     QString name;
-    OptionModel opt;
+    OptionModel* opt;
 };
+
+Q_DECLARE_METATYPE(test)
+Q_DECLARE_METATYPE(test*)
 
 #endif // TEST_H

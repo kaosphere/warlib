@@ -9,6 +9,7 @@
 #include "game/model/modelinfantery.h"
 #include "game/model/modelmonster.h"
 #include "game/model/modelwarmachine.h"
+#include "game/model/test.h"
 
 #include "game/army/army.h"
 
