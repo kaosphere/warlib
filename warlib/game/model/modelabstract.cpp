@@ -192,6 +192,26 @@ void ModelAbstract::setOptions(const QList<OptionModel*> &value)
     options = value;
 }
 
+QList<QVariant> ModelAbstract::getOptionsVariant() const
+{
+    QList<QVariant> vList;
+    for(int i = 0; i < options.size(); ++i)
+    {
+        QVariant var;
+        var.fromValue<OptionModel*>(options[i]);
+        vList.append(var);
+    }
+    return vList;
+}
+
+void ModelAbstract::setOptionsVariant(const QList<QVariant> &value)
+{
+    for(int i = 0; i < value.size(); ++i)
+    {
+        options.append(value[i].value<OptionModel* >());
+    }
+}
+
 void ModelAbstract::addOption(OptionModel *opt)
 {
     options << opt;

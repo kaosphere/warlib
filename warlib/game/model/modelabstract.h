@@ -13,6 +13,7 @@
 #include <QtCore>
 #include <iostream>
 #include <QTextDocument>
+#include <QList>
 
 #include "game/option/optionmodel.h"
 #include "game/stats/statsmodel.h"
@@ -35,7 +36,7 @@ class ModelAbstract : public SerializableObject
     Q_PROPERTY(int squareBaseL READ getSquareBaseL WRITE setSquareBaseL NOTIFY squareBaseLChanged)
     Q_PROPERTY(int unitPower READ getUnitPower WRITE setUnitPower NOTIFY unitPowerChanged)
     Q_PROPERTY(QString imagePath READ getImagePath WRITE setImagePath NOTIFY imagePathChanged)
-    Q_PROPERTY(QList<OptionModel*> options READ getOptions WRITE setOptions NOTIFY optionsChanged)
+    Q_PROPERTY(QList<QVariant> options READ getOptionsVariant WRITE setOptionsVariant NOTIFY optionsChanged)
     Q_PROPERTY(bool banner READ getBanner WRITE setBanner NOTIFY bannerChanged)
     Q_PROPERTY(int bannerPoints READ getBannerPoints WRITE setBannerPoints NOTIFY bannerPointsChanged)
     Q_PROPERTY(bool musician READ getMusician WRITE setMusician NOTIFY musicianChanged)
@@ -187,6 +188,9 @@ public:
 
     QList<OptionModel*> getOptions() const;
     void setOptions(const QList<OptionModel *> &value);
+
+    QList<QVariant> getOptionsVariant() const;
+    void setOptionsVariant(const QList<QVariant> &value);
 
     bool getBanner() const;
     void setBanner(bool value);
