@@ -25,8 +25,6 @@
 /*!
 * Main data structure storing model characteristics.
 * This is the base class for all types of models.
-* TODO AJ 2014-05-06 : this class should be a pure abstract class but serialization
-* prevents to do it. Find a way to do this more cleanly.
 */
 class ModelAbstract : public SerializableObject
 {

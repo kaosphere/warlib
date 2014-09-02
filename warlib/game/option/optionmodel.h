@@ -73,8 +73,44 @@ public slots:
     
 };
 
-//QDataStream &operator<<(QDataStream &ds, const QList<OptionModel*> &obj);
-//QDataStream &operator>>(QDataStream &ds, QList<OptionModel*> &obj);
+namespace QtMetaTypePrivate {
+template <>
+struct QMetaTypeFunctionHelper<OptionModel, true> {
+    static void Delete(void *t)
+    {
+        delete static_cast<OptionModel*>(t);
+    }
+
+    static void *Create(const void *t)
+    {
+        Q_UNUSED(t)
+        return new OptionModel();
+    }
+
+    static void Destruct(void *t)
+    {
+        Q_UNUSED(t) // Silence MSVC that warns for POD types.
+        static_cast<OptionModel*>(t)->~OptionModel();
+    }
+
+    static void *Construct(void *where, const void *t)
+    {
+        Q_UNUSED(t)
+        return new (where) OptionModel;
+    }
+#ifndef QT_NO_DATASTREAM
+    static void Save(QDataStream &stream, const void *t)
+    {
+        stream << *static_cast<const OptionModel*>(t);
+    }
+
+    static void Load(QDataStream &stream, void *t)
+    {
+        stream >> *static_cast<OptionModel*>(t);
+    }
+#endif // QT_NO_DATASTREAM
+};
+}
 
 Q_DECLARE_METATYPE(OptionModel)
 Q_DECLARE_METATYPE(OptionModel*)
